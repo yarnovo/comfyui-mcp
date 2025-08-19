@@ -1,0 +1,40 @@
+{
+  "name": "image_scale_by_pixel_count",
+  "description": "智能图像尺寸调整工具，通过指定目标总像素数来缩放图像。支持按百万像素（megapixels）精确控制输出图像大小，同时保持原始宽高比。使用高质量的缩放算法（nearest-exact），确保图像质量。特别适合批量处理图片到统一文件大小、优化网页图片加载速度、压缩高分辨率图片等场景。",
+  "category": "image-to-image",
+  "parameters": [
+    {
+      "name": "input_image",
+      "type": "string",
+      "subtype": "image",
+      "description": "需要缩放的输入图像路径，支持 jpg、png 等常见格式",
+      "required": true,
+      "path": "1.inputs.image",
+      "default": ""
+    },
+    {
+      "name": "megapixels",
+      "type": "number",
+      "description": "目标总像素数（百万像素）。例如：1表示1百万像素（约1000x1000），0.5表示50万像素（约700x700）",
+      "required": false,
+      "path": "4.inputs.megapixels",
+      "default": 1
+    },
+    {
+      "name": "upscale_method",
+      "type": "string",
+      "description": "缩放算法：nearest-exact（最近邻精确）、bilinear（双线性）、area（区域采样）、bicubic（双三次）、lanczos（Lanczos重采样）",
+      "required": false,
+      "path": "4.inputs.upscale_method",
+      "default": "nearest-exact"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出文件名前缀",
+      "required": false,
+      "path": "2.inputs.filename_prefix",
+      "default": "ComfyUI"
+    }
+  ]
+}

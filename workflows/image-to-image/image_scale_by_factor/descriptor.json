@@ -1,0 +1,40 @@
+{
+  "name": "image_scale_by_factor",
+  "description": "专业的图像比例缩放工具，可以按指定倍数精确调整图像尺寸。支持多种缩放算法（最近邻、双线性、双三次等），确保在不同缩放比例下都能获得最佳质量。适用于批量处理图像、制作缩略图、准备不同分辨率素材、优化网页图片等场景。缩放过程保持原始宽高比，避免图像变形。",
+  "category": "image-to-image",
+  "parameters": [
+    {
+      "name": "input_image",
+      "type": "string",
+      "subtype": "image",
+      "description": "需要缩放的输入图像路径，支持 jpg、png 等常见格式",
+      "required": true,
+      "path": "3.inputs.image",
+      "default": ""
+    },
+    {
+      "name": "scale_by",
+      "type": "number",
+      "description": "缩放比例：<1 缩小图像，>1 放大图像，=1 保持原始尺寸。建议范围 0.25-4.0",
+      "required": false,
+      "path": "1.inputs.scale_by",
+      "default": 1.0
+    },
+    {
+      "name": "upscale_method",
+      "type": "string",
+      "description": "缩放算法：nearest-exact（最近邻，速度快），bilinear（双线性，平衡），area（区域插值，缩小时质量好），bicubic（双三次，质量高），lanczos（Lanczos，最高质量）",
+      "required": false,
+      "path": "1.inputs.upscale_method",
+      "default": "nearest-exact"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出文件名前缀",
+      "required": false,
+      "path": "7.inputs.filename_prefix",
+      "default": "ComfyUI"
+    }
+  ]
+}

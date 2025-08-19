@@ -1,0 +1,87 @@
+{
+  "description": "使用 RMBG 多模型支持的专业背景移除工作流。支持 RMBG-2.0、INSPYRENET、BEN、BEN2 等多种先进模型，可智能识别并精确分离前景主体与背景。提供灵敏度调节、前景优化、mask边缘处理等专业功能，支持透明背景或自定义颜色背景输出。特别适合电商产品图、人像抠图、素材制作等需要精细背景处理的场景。",
+  "category": "image-to-image",
+  "parameters": [
+    {
+      "name": "input_image",
+      "type": "string",
+      "subtype": "image",
+      "description": "需要移除背景的输入图像路径，支持 jpg、png 等常见格式",
+      "required": true,
+      "path": "11.inputs.image",
+      "default": ""
+    },
+    {
+      "name": "model",
+      "type": "string",
+      "description": "选择使用的背景移除模型：RMBG-2.0、INSPYRENET、BEN、BEN2（默认）",
+      "required": false,
+      "path": "10.inputs.model",
+      "default": "BEN2"
+    },
+    {
+      "name": "sensitivity",
+      "type": "number",
+      "description": "模型灵敏度 (0-1)，控制前景检测的敏感程度，值越高越容易保留细节",
+      "required": false,
+      "path": "10.inputs.sensitivity",
+      "default": 1
+    },
+    {
+      "name": "process_res",
+      "type": "number",
+      "description": "处理分辨率（像素），影响处理精度和速度，建议 512-1024",
+      "required": false,
+      "path": "10.inputs.process_res",
+      "default": 1024
+    },
+    {
+      "name": "mask_blur",
+      "type": "number",
+      "description": "遮罩模糊半径（像素），用于平滑边缘，0 为不模糊",
+      "required": false,
+      "path": "10.inputs.mask_blur",
+      "default": 0
+    },
+    {
+      "name": "mask_offset",
+      "type": "number",
+      "description": "遮罩偏移量（像素），正值扩展遮罩，负值收缩遮罩",
+      "required": false,
+      "path": "10.inputs.mask_offset",
+      "default": 0
+    },
+    {
+      "name": "invert_output",
+      "type": "boolean",
+      "description": "反转输出，true 时输出背景而非前景",
+      "required": false,
+      "path": "10.inputs.invert_output",
+      "default": false
+    },
+    {
+      "name": "refine_foreground",
+      "type": "boolean",
+      "description": "优化前景，启用后会对前景边缘进行精细化处理",
+      "required": false,
+      "path": "10.inputs.refine_foreground",
+      "default": false
+    },
+    {
+      "name": "background",
+      "type": "string",
+      "description": "背景类型：Alpha（透明背景）、Color（纯色背景）",
+      "required": false,
+      "path": "10.inputs.background",
+      "default": "Alpha"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出文件名前缀，用于保存处理后的透明背景图像",
+      "required": false,
+      "path": "9.inputs.filename_prefix",
+      "default": "ComfyUI"
+    }
+  ]
+}

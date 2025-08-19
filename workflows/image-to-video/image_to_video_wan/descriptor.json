@@ -1,0 +1,162 @@
+{
+  "name": "image_to_video_wan",
+  "description": "将静态图片智能转换为流畅动态视频的专业工具。使用 WAN 2.1 先进模型，可以让图片中的人物动起来（转身、挥手、行走），让场景活起来（云朵飘动、水波荡漾、树叶摇曳），或创建产品360度展示。支持16-128帧输出，多种分辨率选择。必须提供输入图片和动作描述。特别适合角色动画、产品展示、创意特效制作。",
+  "category": "image-to-video",
+  "parameters": [
+    {
+      "name": "positive_prompt",
+      "type": "string",
+      "description": "描述视频中的动作和变化，如：转身、挥手、云朵飘动、360度旋转等",
+      "required": true,
+      "default": "",
+      "path": "6.inputs.text"
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "负向提示词，描述不想要出现的内容",
+      "required": false,
+      "default": null,
+      "path": "7.inputs.text"
+    },
+    {
+      "name": "input_image",
+      "type": "string",
+      "subtype": "image",
+      "description": "要转换为视频的静态图片路径，建议使用清晰的图片",
+      "required": true,
+      "default": "",
+      "path": "52.inputs.image"
+    },
+    {
+      "name": "width",
+      "type": "number",
+      "description": "视频宽度（像素）",
+      "required": false,
+      "default": 512,
+      "min": 256,
+      "max": 1024,
+      "path": "50.inputs.width"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "视频高度（像素）",
+      "required": false,
+      "default": 512,
+      "min": 256,
+      "max": 1024,
+      "path": "50.inputs.height"
+    },
+    {
+      "name": "length",
+      "type": "number",
+      "description": "视频帧数：16帧(1秒)、33帧(2秒)、64帧(4秒)、128帧(8秒)",
+      "required": false,
+      "default": 33,
+      "min": 16,
+      "max": 128,
+      "path": "50.inputs.length"
+    },
+    {
+      "name": "fps",
+      "type": "number",
+      "description": "视频帧率",
+      "required": false,
+      "default": 16,
+      "min": 8,
+      "max": 60,
+      "path": "55.inputs.fps"
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于生成结果的可重复性",
+      "required": false,
+      "default": 47345648069532,
+      "min": 0,
+      "max": 999999999999999,
+      "path": "3.inputs.seed"
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数，影响生成质量",
+      "required": false,
+      "default": 20,
+      "min": 10,
+      "max": 50,
+      "path": "3.inputs.steps"
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "分类器引导强度，控制提示词对生成的影响程度",
+      "required": false,
+      "default": 6,
+      "min": 1,
+      "max": 20,
+      "path": "3.inputs.cfg"
+    },
+    {
+      "name": "denoise",
+      "type": "number",
+      "description": "去噪强度",
+      "required": false,
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "path": "3.inputs.denoise"
+    },
+    {
+      "name": "shift",
+      "type": "number",
+      "description": "SD3 采样算法的偏移值",
+      "required": false,
+      "default": 8,
+      "min": 0,
+      "max": 20,
+      "path": "54.inputs.shift"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出视频文件名前缀",
+      "required": false,
+      "default": "video/ComfyUI",
+      "path": "56.inputs.filename_prefix"
+    },
+    {
+      "name": "video_format",
+      "type": "string",
+      "description": "视频格式",
+      "required": false,
+      "default": "auto",
+      "enum": ["auto", "mp4", "webm", "avi"],
+      "path": "56.inputs.format"
+    },
+    {
+      "name": "codec",
+      "type": "string",
+      "description": "视频编码器",
+      "required": false,
+      "default": "auto",
+      "enum": ["auto", "h264", "h265", "vp9"],
+      "path": "56.inputs.codec"
+    }
+  ],
+  "models": {
+    "unet": "wan2.1_i2v_480p_14B_fp16.safetensors",
+    "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+    "vae": "wan_2.1_vae.safetensors",
+    "clip_vision": "clip_vision_h.safetensors"
+  },
+  "tags": [
+    "image-to-video",
+    "wan",
+    "animation",
+    "video-generation"
+  ],
+  "output_node": "56",
+  "version": "1.0.0"
+}

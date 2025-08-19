@@ -1,0 +1,36 @@
+{
+  "name": "comfyui-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for ComfyUI workflows",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "comfyui-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "inspector": "npx @modelcontextprotocol/inspector node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "comfyui",
+    "workflow"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ws": "^8.18.0",
+    "uuid": "^10.0.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.12",
+    "@types/ws": "^8.5.14",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.7.3",
+    "tsx": "^4.19.2"
+  }
+}

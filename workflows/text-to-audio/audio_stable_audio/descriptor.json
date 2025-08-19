@@ -1,0 +1,137 @@
+{
+  "name": "audio_stable_audio",
+  "description": "根据文本描述生成专业级音乐和音效的创新工具。使用 Stable Audio Open 模型，可生成各种音乐风格（电子、古典、爵士、摇滚等）、环境音效（自然声、城市声、科幻声）、游戏音效和乐器演奏。支持1-180秒时长，可指定节奏BPM、调性、乐器组合。适合背景音乐制作、游戏音效、播客配乐、创意音乐探索。只需描述想要的声音特征即可生成。",
+  "category": "text-to-audio",
+  "parameters": [
+    {
+      "name": "positive_prompt",
+      "type": "string",
+      "description": "描述音频特征：音乐风格(electronic/classical/jazz)、乐器、节奏BPM、情绪氛围等",
+      "required": true,
+      "default": "",
+      "path": "6.inputs.text"
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "负向提示词，描述不想要出现的音频特征",
+      "required": false,
+      "default": null,
+      "path": "7.inputs.text"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "音频时长（秒）：1-5秒短音效，10-30秒音乐片段，30-180秒完整作品",
+      "required": false,
+      "default": 47.6,
+      "min": 1,
+      "max": 180,
+      "path": "11.inputs.seconds"
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于生成结果的可重复性",
+      "required": false,
+      "default": 588404847692323,
+      "min": 0,
+      "max": 999999999999999,
+      "path": "3.inputs.seed"
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数，影响生成质量",
+      "required": false,
+      "default": 50,
+      "min": 10,
+      "max": 150,
+      "path": "3.inputs.steps"
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "CFG 强度，控制提示词的影响程度",
+      "required": false,
+      "default": 4.98,
+      "min": 1,
+      "max": 20,
+      "path": "3.inputs.cfg"
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称",
+      "required": false,
+      "default": "dpmpp_3m_sde_gpu",
+      "enum": ["dpmpp_3m_sde_gpu", "dpmpp_2m", "euler", "euler_a", "heun", "dpm_2", "dpm_2_a"],
+      "path": "3.inputs.sampler_name"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型",
+      "required": false,
+      "default": "exponential",
+      "enum": ["normal", "karras", "exponential", "sgm_uniform", "simple", "ddim_uniform"],
+      "path": "3.inputs.scheduler"
+    },
+    {
+      "name": "denoise",
+      "type": "number",
+      "description": "去噪强度",
+      "required": false,
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "path": "3.inputs.denoise"
+    },
+    {
+      "name": "batch_size",
+      "type": "number",
+      "description": "批次大小，一次生成多少个音频",
+      "required": false,
+      "default": 1,
+      "min": 1,
+      "max": 8,
+      "path": "11.inputs.batch_size"
+    },
+    {
+      "name": "checkpoint",
+      "type": "string",
+      "description": "模型检查点文件名",
+      "required": false,
+      "default": "stable-audio-open-1.0.safetensors",
+      "path": "4.inputs.ckpt_name"
+    },
+    {
+      "name": "clip_model",
+      "type": "string",
+      "description": "CLIP 模型文件名",
+      "required": false,
+      "default": "t5-base.safetensors",
+      "path": "10.inputs.clip_name"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出音频文件名前缀",
+      "required": false,
+      "default": "audio/ComfyUI",
+      "path": "13.inputs.filename_prefix"
+    }
+  ],
+  "models": {
+    "checkpoint": "stable-audio-open-1.0.safetensors",
+    "clip": "t5-base.safetensors"
+  },
+  "tags": [
+    "text-to-audio",
+    "stable-audio",
+    "music-generation",
+    "sound-generation"
+  ],
+  "output_node": "13",
+  "version": "1.0.0"
+}

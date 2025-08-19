@@ -1,0 +1,183 @@
+{
+  "name": "wan2_2_14b_t2v",
+  "description": "使用 WAN 2.2 14B 双模型架构从文本生成超高质量视频的专业工具。采用创新的两阶段采样策略：第一阶段使用高噪声模型(14B)构建视频基础结构，第二阶段使用低噪声模型(14B)精炼细节，实现更出色的生成质量。配备 T5-XXL 文本编码器和 SD3 采样算法，支持生成640x640分辨率的高质量视频。特别适合需要极高质量的专业视频制作、电影特效预览、高端广告创意等应用场景。",
+  "category": "text-to-video",
+  "parameters": [
+    {
+      "name": "positive_prompt",
+      "type": "string",
+      "description": "描述想要生成的视频内容，包括场景、动作、光线、镜头运动等。详细描述可获得更好效果",
+      "required": true,
+      "default": "",
+      "path": "6.inputs.text"
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "负向提示词，描述不想要出现的内容，如模糊、静止、低质量、畸形等",
+      "required": false,
+      "default": null,
+      "path": "7.inputs.text"
+    },
+    {
+      "name": "width",
+      "type": "number",
+      "description": "视频宽度（像素）。建议使用16的倍数以获得最佳效果",
+      "required": false,
+      "default": 640,
+      "min": 256,
+      "max": 1280,
+      "path": "59.inputs.width"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "视频高度（像素）。建议使用16的倍数以获得最佳效果",
+      "required": false,
+      "default": 640,
+      "min": 256,
+      "max": 1280,
+      "path": "59.inputs.height"
+    },
+    {
+      "name": "length",
+      "type": "number",
+      "description": "视频总帧数。81帧约5秒（16fps），可根据需要调整",
+      "required": false,
+      "default": 81,
+      "min": 16,
+      "max": 256,
+      "path": "59.inputs.length"
+    },
+    {
+      "name": "batch_size",
+      "type": "number",
+      "description": "批次大小，一次生成多少个视频",
+      "required": false,
+      "default": 1,
+      "min": 1,
+      "max": 4,
+      "path": "59.inputs.batch_size"
+    },
+    {
+      "name": "fps",
+      "type": "number",
+      "description": "视频帧率（每秒帧数）",
+      "required": false,
+      "default": 16,
+      "min": 8,
+      "max": 60,
+      "path": "60.inputs.fps"
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于生成结果的可重复性。使用相同种子可获得相同结果",
+      "required": false,
+      "default": 774388746670969,
+      "min": 0,
+      "max": 999999999999999,
+      "path": "57.inputs.noise_seed"
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "总采样步数，分配给两个阶段。更多步数质量更好但速度更慢",
+      "required": false,
+      "default": 20,
+      "min": 10,
+      "max": 50,
+      "path": "57.inputs.steps"
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "分类器引导强度，控制提示词对生成的影响程度。较高值更严格遵循提示词",
+      "required": false,
+      "default": 3.5,
+      "min": 1,
+      "max": 20,
+      "path": "57.inputs.cfg"
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称，两阶段使用相同采样器",
+      "required": false,
+      "default": "euler",
+      "enum": ["euler", "euler_ancestral", "dpmpp_2m", "dpmpp_3m_sde", "uni_pc", "lcm"],
+      "path": "57.inputs.sampler_name"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型，控制采样过程的噪声调度",
+      "required": false,
+      "default": "simple",
+      "enum": ["normal", "karras", "exponential", "simple", "beta"],
+      "path": "57.inputs.scheduler"
+    },
+    {
+      "name": "stage1_end_step",
+      "type": "number",
+      "description": "第一阶段（高噪声模型）结束步数，默认为总步数的一半",
+      "required": false,
+      "default": 10,
+      "min": 5,
+      "max": 25,
+      "path": "57.inputs.end_at_step"
+    },
+    {
+      "name": "shift",
+      "type": "number",
+      "description": "SD3 采样算法的偏移值，影响生成的细节和风格",
+      "required": false,
+      "default": 8,
+      "min": 0,
+      "max": 20,
+      "path": "54.inputs.shift"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出视频文件名前缀",
+      "required": false,
+      "default": "video/ComfyUI",
+      "path": "61.inputs.filename_prefix"
+    },
+    {
+      "name": "video_format",
+      "type": "string",
+      "description": "视频格式",
+      "required": false,
+      "default": "auto",
+      "enum": ["auto", "mp4", "webm", "avi"],
+      "path": "61.inputs.format"
+    },
+    {
+      "name": "codec",
+      "type": "string",
+      "description": "视频编码器",
+      "required": false,
+      "default": "auto",
+      "enum": ["auto", "h264", "h265", "vp9"],
+      "path": "61.inputs.codec"
+    }
+  ],
+  "models": {
+    "unet_high_noise": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+    "unet_low_noise": "wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors",
+    "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+    "vae": "wan_2.1_vae.safetensors"
+  },
+  "tags": [
+    "text-to-video",
+    "wan2.2",
+    "14B-model",
+    "two-stage",
+    "video-generation",
+    "high-quality"
+  ],
+  "output_node": "61",
+  "version": "1.0.0"
+}

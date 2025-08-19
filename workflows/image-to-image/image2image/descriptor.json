@@ -1,0 +1,104 @@
+{
+  "name": "image2image",
+  "description": "基于现有图像进行智能修改和风格转换的强大工具。可以将照片转换为不同艺术风格（油画、水彩、动漫等），修改图像内容（更换背景、改变季节、调整光线），或增强图像质量。通过调节去噪强度(denoise)精确控制修改程度，从轻微调整到完全重绘。必须提供输入图片路径。",
+  "category": "image-to-image",
+  "parameters": [
+    {
+      "name": "input_image",
+      "type": "string",
+      "subtype": "image",
+      "description": "输入图片的绝对路径，支持 jpg/png 等常见格式",
+      "required": true,
+      "path": "10.inputs.image",
+      "default": ""
+    },
+    {
+      "name": "positive_prompt",
+      "type": "string",
+      "description": "正向提示词，描述想要生成的图片内容",
+      "default": null,
+      "required": false,
+      "path": "6.inputs.text"
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "负向提示词，描述不想要出现的内容",
+      "default": null,
+      "required": false,
+      "path": "7.inputs.text"
+    },
+    {
+      "name": "denoise",
+      "type": "number",
+      "description": "去噪强度 (0-1)：0.1-0.3轻微修改，0.4-0.7中等变化，0.8-1.0大幅重绘",
+      "default": 0.87,
+      "required": false,
+      "path": "3.inputs.denoise"
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数",
+      "default": 20,
+      "required": false,
+      "path": "3.inputs.steps"
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "CFG 强度，控制提示词的影响程度",
+      "default": 8,
+      "required": false,
+      "path": "3.inputs.cfg"
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于生成结果的可重复性",
+      "default": -1,
+      "required": false,
+      "path": "3.inputs.seed"
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称",
+      "default": "dpmpp_2m",
+      "required": false,
+      "path": "3.inputs.sampler_name"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型",
+      "default": "normal",
+      "required": false,
+      "path": "3.inputs.scheduler"
+    },
+    {
+      "name": "checkpoint",
+      "type": "string",
+      "description": "模型检查点文件名",
+      "default": "v1-5-pruned-emaonly-fp16.safetensors",
+      "required": false,
+      "path": "14.inputs.ckpt_name"
+    },
+    {
+      "name": "megapixels",
+      "type": "number",
+      "description": "图像缩放到的总像素数（百万像素）",
+      "default": 0.25,
+      "required": false,
+      "path": "18.inputs.megapixels"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出文件名前缀",
+      "default": "ComfyUI",
+      "required": false,
+      "path": "9.inputs.filename_prefix"
+    }
+  ]
+}

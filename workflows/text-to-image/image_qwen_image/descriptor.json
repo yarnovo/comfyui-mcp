@@ -1,0 +1,62 @@
+{
+  "description": "使用 Qwen 视觉语言模型根据文本描述生成高质量图像。支持中英文提示词，擅长理解复杂的场景描述和细节要求，适合生成各种风格的图像，包括写实、艺术、卡通等。默认分辨率1024x1024，支持自定义尺寸。",
+  "category": "text-to-image",
+  "parameters": [
+    {
+      "name": "prompt",
+      "type": "string",
+      "description": "描述想要生成的图像内容，支持中英文，越详细效果越好",
+      "required": true,
+      "path": "6.inputs.text",
+      "default": ""
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "描述不想出现的内容，如：模糊、低质量、变形等",
+      "required": false,
+      "path": "7.inputs.text",
+      "default": null
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，-1为随机生成，固定值可复现结果",
+      "required": false,
+      "path": "3.inputs.seed",
+      "default": -1
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数",
+      "required": false,
+      "path": "3.inputs.steps",
+      "default": 20
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "CFG 强度",
+      "required": false,
+      "path": "3.inputs.cfg",
+      "default": 2.5
+    },
+    {
+      "name": "width",
+      "type": "number",
+      "description": "图像宽度",
+      "required": false,
+      "path": "58.inputs.width",
+      "default": 1024
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "图像高度",
+      "required": false,
+      "path": "58.inputs.height",
+      "default": 1024
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "description": "使用 HiDream i1 Full 模型生成超高质量图像的专业工作流。HiDream i1 是一个基于 SD3 架构的先进文生图模型，采用四重 CLIP 编码器（CLIP-L、CLIP-G、T5-XXL、LLaMA 3.1）实现极其精确的文本理解和图像生成。特别擅长生成具有复杂光影效果、丰富细节和艺术风格的人物肖像与场景。支持 1024x1024 及更高分辨率输出，适合专业创作、概念设计和高端艺术创作。",
+  "category": "text-to-image",
+  "parameters": [
+    {
+      "name": "positive_prompt",
+      "type": "string",
+      "description": "正向提示词，描述想要生成的图像内容。建议详细描述主体、光线、构图、风格等要素",
+      "required": true,
+      "path": "16.inputs.text",
+      "default": ""
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "负向提示词，描述不想要出现的内容，如低质量、瑕疵、不想要的元素等",
+      "required": false,
+      "path": "40.inputs.text",
+      "default": null
+    },
+    {
+      "name": "width",
+      "type": "number",
+      "description": "图像宽度（像素）。建议使用 1024 的倍数以获得最佳效果",
+      "required": false,
+      "path": "53.inputs.width",
+      "default": 1024
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "图像高度（像素）。建议使用 1024 的倍数以获得最佳效果",
+      "required": false,
+      "path": "53.inputs.height",
+      "default": 1024
+    },
+    {
+      "name": "batch_size",
+      "type": "number",
+      "description": "批次大小，一次生成多少张图像",
+      "required": false,
+      "path": "53.inputs.batch_size",
+      "default": 1
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于生成结果的可重复性。-1 为随机",
+      "required": false,
+      "path": "3.inputs.seed",
+      "default": 434414617479586
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数，影响生成质量。更多步数通常质量更好但速度更慢（推荐 30-50）",
+      "required": false,
+      "path": "3.inputs.steps",
+      "default": 50
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "CFG 强度，控制提示词的影响程度。较高值更严格遵循提示词（推荐 4-7）",
+      "required": false,
+      "path": "3.inputs.cfg",
+      "default": 5
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称，不同采样器有不同的生成特性",
+      "required": false,
+      "path": "3.inputs.sampler_name",
+      "default": "uni_pc"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型，控制采样过程的噪声调度",
+      "required": false,
+      "path": "3.inputs.scheduler",
+      "default": "simple"
+    },
+    {
+      "name": "denoise",
+      "type": "number",
+      "description": "去噪强度（0-1）",
+      "required": false,
+      "path": "3.inputs.denoise",
+      "default": 1
+    },
+    {
+      "name": "shift",
+      "type": "number",
+      "description": "SD3 采样算法的偏移值，影响生成的细节和风格（推荐 2-4）",
+      "required": false,
+      "path": "70.inputs.shift",
+      "default": 3.0
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出文件名前缀",
+      "required": false,
+      "path": "9.inputs.filename_prefix",
+      "default": "ComfyUI"
+    }
+  ]
+}
