@@ -1,0 +1,17 @@
+{
+    "mcpServers": {
+        "comfyui": {
+            "command": "npx",
+            "args": [
+                "/home/yarnb/comfyui-mcp"
+            ],
+            "env": {
+                "WORKFLOWS_DIR": "/home/yarnb/comfyui-mcp/workflows",
+                "COMFYUI_HOST": "172.22.240.1",
+                "COMFYUI_PORT": "8000",
+                "BYPASS_PROXY": "true",
+                "LOG_LEVEL": "WARN"
+            }
+        }
+    }
+}
