@@ -1,0 +1,163 @@
+{
+  "name": "audio_ace_step_1_t2a_song",
+  "description": "使用 ACE Step v1 3.5B 模型生成带歌词音乐的专业工具。支持多语言歌词创作（包括日文、中文、英文等），能够根据音乐风格标签和详细歌词内容生成高质量的完整歌曲作品。采用先进的歌词编码技术和潜在扩散模型，确保生成的音乐与歌词内容高度匹配，同时保持专业级的音质和音乐表现力。特别适合原创歌曲创作、音乐演示、虚拟歌手项目和多媒体内容制作。",
+  "category": "text-to-audio",
+  "parameters": [
+    {
+      "name": "tags",
+      "type": "string",
+      "description": "音乐风格标签，用逗号分隔，如：anime, soft female vocals, kawaii pop, j-pop, piano, guitar, synthesizer, fast, happy, cheerful",
+      "required": true,
+      "default": "",
+      "path": "14.inputs.tags"
+    },
+    {
+      "name": "lyrics",
+      "type": "string",
+      "description": "歌词内容，支持多语言歌词和音乐结构标记，如[inst]、[verse]、[chorus]等，可以创作完整的歌曲结构",
+      "required": true,
+      "default": "",
+      "path": "14.inputs.lyrics"
+    },
+    {
+      "name": "lyrics_strength",
+      "type": "number",
+      "description": "歌词强度控制(0-1)，影响歌词对音乐生成的影响程度，接近1时更符合歌词描述，接近0时更注重音乐风格",
+      "required": false,
+      "default": 0.99,
+      "min": 0,
+      "max": 1,
+      "path": "14.inputs.lyrics_strength"
+    },
+    {
+      "name": "seconds",
+      "type": "number",
+      "description": "音频时长（秒），控制生成歌曲的持续时间，建议根据歌词长度合理设置",
+      "required": false,
+      "default": 120,
+      "min": 30,
+      "max": 300,
+      "path": "17.inputs.seconds"
+    },
+    {
+      "name": "batch_size",
+      "type": "number",
+      "description": "批次大小，一次生成多少个音频文件",
+      "required": false,
+      "default": 1,
+      "min": 1,
+      "max": 4,
+      "path": "17.inputs.batch_size"
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于生成结果的可重复性，-1表示随机",
+      "required": false,
+      "default": 468254064217846,
+      "min": 0,
+      "max": 999999999999999,
+      "path": "52.inputs.seed"
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数，影响生成质量，更多步数通常质量更好但速度更慢，歌曲生成建议使用较高步数",
+      "required": false,
+      "default": 50,
+      "min": 20,
+      "max": 150,
+      "path": "52.inputs.steps"
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "分类器引导强度，控制标签和歌词对生成的影响程度",
+      "required": false,
+      "default": 5,
+      "min": 1,
+      "max": 15,
+      "path": "52.inputs.cfg"
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称，不同采样器有不同的生成特性",
+      "required": false,
+      "default": "euler",
+      "enum": ["euler", "euler_a", "heun", "dpm_2", "dpm_2_a", "dpmpp_2s_a", "dpmpp_2m", "dpmpp_sde", "uni_pc"],
+      "path": "52.inputs.sampler_name"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型，控制采样过程的噪声调度",
+      "required": false,
+      "default": "simple",
+      "enum": ["simple", "normal", "karras", "exponential", "sgm_uniform", "ddim_uniform"],
+      "path": "52.inputs.scheduler"
+    },
+    {
+      "name": "denoise",
+      "type": "number",
+      "description": "去噪强度(0-1)，1.0为完全去噪",
+      "required": false,
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "path": "52.inputs.denoise"
+    },
+    {
+      "name": "shift",
+      "type": "number",
+      "description": "SD3采样算法的偏移值，影响生成的风格和细节",
+      "required": false,
+      "default": 5,
+      "min": 0,
+      "max": 10,
+      "path": "51.inputs.shift"
+    },
+    {
+      "name": "multiplier",
+      "type": "number",
+      "description": "Reinhard色调映射乘数，影响音频的动态范围处理",
+      "required": false,
+      "default": 1.0,
+      "min": 0.1,
+      "max": 5.0,
+      "path": "50.inputs.multiplier"
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出音频文件名前缀，用于保存生成的歌曲文件",
+      "required": false,
+      "default": "audio/ComfyUI",
+      "path": "59.inputs.filename_prefix"
+    },
+    {
+      "name": "quality",
+      "type": "string",
+      "description": "MP3音质等级，V0为最高质量的可变比特率",
+      "required": false,
+      "default": "V0",
+      "enum": ["V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "320", "256", "192", "128"],
+      "path": "59.inputs.quality"
+    }
+  ],
+  "models": {
+    "checkpoint": "ace_step_v1_3.5b.safetensors"
+  },
+  "tags": [
+    "text-to-audio",
+    "ace-step",
+    "song-generation",
+    "lyrics-music",
+    "vocal-synthesis",
+    "multi-language",
+    "j-pop",
+    "anime-music"
+  ],
+  "output_node": "59",
+  "version": "1.0.0"
+}

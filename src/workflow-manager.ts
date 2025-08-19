@@ -179,6 +179,36 @@ export class WorkflowManager {
         } else {
           console.error(`警告：视频参数 ${param.name} 缺少 path 字段`);
         }
+      } else if (param.subtype === 'audio' && inputValue && client) {
+        // 通过 subtype 识别音频参数
+        let audioName = inputValue;
+        
+        // 智能判断：如果是绝对路径就上传，如果是文件名（带后缀）就直接使用
+        if (path.isAbsolute(inputValue)) {
+          // 是绝对路径，检查文件是否存在并上传
+          try {
+            await fs.access(inputValue);
+            console.error(`检测到本地音频路径，开始上传: ${inputValue}`);
+            audioName = await client.uploadAudio(inputValue);
+            console.error(`音频上传成功，文件名: ${audioName}`);
+          } catch (error) {
+            console.error(`音频文件不存在或上传失败: ${inputValue}`);
+            throw new Error(`无法访问或上传音频文件: ${inputValue}`);
+          }
+        } else if (inputValue.includes('.')) {
+          // 包含后缀，认为是已存在的音频名称
+          console.error(`使用已存在的 ComfyUI 音频: ${inputValue}`);
+        } else {
+          // 既不是路径也不包含后缀，可能格式有误
+          console.error(`警告：音频参数 ${param.name} 格式可能有误: ${inputValue}`);
+        }
+        
+        // 使用 path 字段更新值
+        if (param.path) {
+          this.setValueByPath(processedApi, param.path, audioName);
+        } else {
+          console.error(`警告：音频参数 ${param.name} 缺少 path 字段`);
+        }
       } else if (param.path) {
         // 处理其他参数
         const value = inputValue !== undefined ? inputValue : param.default;

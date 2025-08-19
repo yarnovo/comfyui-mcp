@@ -320,6 +320,63 @@ export class ComfyUIClient extends EventEmitter {
     return result.name || fileName;
   }
 
+  public async uploadAudio(
+    audioPath: string, 
+    name?: string, 
+    audioType: 'input' | 'output' | 'temp' = 'input', 
+    overwrite: boolean = true
+  ): Promise<string> {
+    const fsPromises = await import('fs/promises');
+    const path = await import('path');
+    
+    // 读取音频文件
+    const audioBuffer = await fsPromises.readFile(audioPath);
+    const fileName = name || path.basename(audioPath);
+    
+    // 创建 FormData
+    const formData = new FormData();
+    const blob = new Blob([audioBuffer], { type: 'audio/mpeg' });
+    formData.append('image', blob, fileName);  // ComfyUI 使用 'image' 字段，即使是音频文件
+    formData.append('type', audioType);
+    formData.append('overwrite', String(overwrite));
+    
+    const url = `http://${this.host}:${this.port}/upload/image`;  // 使用 /upload/image 端点
+    
+    this.logger.info('上传音频到 ComfyUI', { 
+      url, 
+      fileName, 
+      audioType, 
+      overwrite,
+      originalPath: audioPath 
+    });
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      this.logger.error('上传音频失败', { 
+        status: response.status, 
+        error: errorText,
+        fileName,
+        url 
+      });
+      throw new Error(`上传音频失败: ${response.status} - ${errorText}`);
+    }
+    
+    const result = await response.json() as { name?: string; [key: string]: any };
+    this.logger.info('音频上传成功', { 
+      fileName, 
+      result,
+      audioType 
+    });
+    
+    // 返回上传后的文件名（ComfyUI 可能会修改文件名）
+    return result.name || fileName;
+  }
+
   private async downloadImage(filename: string, subfolder: string = '', type: string = 'output'): Promise<Buffer> {
     const params = new URLSearchParams({
       filename,
