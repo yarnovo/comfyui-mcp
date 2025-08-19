@@ -16,8 +16,8 @@
 
 使用 Read 工具读取用户指定的 JSON 文件，分析其结构：
 
-- 识别主要节点类型（CLIPTextEncode、LoadImage、KSampler、SaveImage 等）
-- 判断工作流类型（text-to-image、image-to-image、image-to-video、text-to-audio）
+- 识别主要节点类型（CLIPTextEncode、LoadImage、LoadVideo、LoadAudio、KSampler、SaveImage、VHS 等）
+- 判断工作流类型（text-to-image、image-to-image、image-to-video、video-to-image、text-to-video、text-to-audio、audio-to-audio）
 - 提取关键参数节点和路径
 
 ### 2. 自动判断工作流分类
@@ -26,7 +26,10 @@
 - **text-to-image**: 有 CLIPTextEncode + EmptyLatentImage + SaveImage
 - **image-to-image**: 有 LoadImage + CLIPTextEncode + SaveImage
 - **image-to-video**: 有 LoadImage/图像输入 + 视频保存节点
+- **video-to-image**: 有 LoadVideo/VHS相关节点 + SaveImage
+- **text-to-video**: 有文本输入 + 视频保存节点
 - **text-to-audio**: 有文本输入 + 音频保存节点
+- **audio-to-audio**: 有音频输入 + 音频保存节点
 
 ### 3. 生成工作流名称
 
@@ -51,14 +54,16 @@
 - RandomNoise → seed/noise_seed
 - BasicScheduler → steps、denoise
 
-**图像输入：**
+**媒体输入参数：**
 - LoadImage 节点 → 为对应参数添加 `subtype: "image"`
-- 支持多个图片输入，参数名可自定义（如 input_image、start_image、end_image 等）
+- LoadVideo/VHS 相关节点 → 为对应参数添加 `subtype: "video"`
+- LoadAudio 相关节点 → 为对应参数添加 `subtype: "audio"`
+- 支持多个媒体输入，参数名可自定义（如 input_image、start_image、end_image、input_video、input_audio 等）
 
 **输出参数：**
 - SaveImage → filename_prefix
-- 视频节点 → fps、format、codec
-- 音频节点 → 相关参数
+- 视频保存节点（VHS等） → fps、format、codec、filename_prefix
+- 音频保存节点（SaveAudio等） → quality、filename_prefix、相关音频参数
 
 **⚠️ 重要：output_dir 参数说明**
 - `output_dir` 参数由 comfyui-mcp 系统自动添加，**不要**在 descriptor.json 中定义
@@ -95,7 +100,7 @@ workflows/
     {
       "name": "[参数名]",
       "type": "[string/number]",
-      "subtype": "[可选，如 'image' 表示图片参数]",
+      "subtype": "[可选，'image'表示图片参数，'video'表示视频参数，'audio'表示音频参数]",
       "description": "[参考已有工作流的描述风格]",
       "required": [true/false],
       "path": "[节点ID.inputs.字段名]",
@@ -123,7 +128,11 @@ workflows/
    - T5-XXL 等辅助提示词：非必填，默认值设为 `null`
    - 尺寸参数（width、height）：可以有默认值（如 1024）
    - 批次参数（batch_size）：默认值通常为 1
-   - **图片参数**：必须添加 `"subtype": "image"` 标记，以便系统自动处理图片上传
+   - **媒体文件参数**：必须添加相应的 subtype 标记：
+     - 图片参数：`"subtype": "image"`
+     - 视频参数：`"subtype": "video"`
+     - 音频参数：`"subtype": "audio"`
+   - 系统会根据 subtype 自动处理相应的文件上传功能
 
 ### 8. 生成 README.md
 
