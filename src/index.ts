@@ -138,7 +138,7 @@ class ComfyUIMCPServer {
       try {
         // 准备参数信息，包括工作流信息和用户输入的参数
         const paramsInfo = {
-          workflowName: workflowName,
+          toolName: name,  // 使用完整的工具名称，如 run_audio_to_audio_workflow_audio_ace_step_1_a2a_editing
           workflowCategory: workflow.category,
           workflowDescription: workflow.description,
           inputParameters: workflowArgs  // 只保存用户实际输入的参数

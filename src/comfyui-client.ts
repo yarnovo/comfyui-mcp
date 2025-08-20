@@ -444,19 +444,16 @@ export class ComfyUIClient extends EventEmitter {
     if (inputParams) {
       const jsonPath = path.join(outputDir, 'input.json');
       
-      // 创建包含参数信息的 JSON 对象
-      const paramsInfo: any = {
-        generatedAt: new Date().toISOString(),
-        originalFilename: filename
-      };
+      // 创建只包含 toolName 和 inputParameters 的 JSON 对象
+      const paramsInfo: any = {};
       
-      // 如果有工作流信息，添加到 JSON
-      if (inputParams.workflowName) {
-        // 新格式：将 workflow 拆分为 workflowName 和 category
-        paramsInfo.workflow = {
-          name: inputParams.workflowName,
-          category: inputParams.workflowCategory || inputParams.category || 'unknown'
-        };
+      // 添加工具名称（如果存在）
+      if (inputParams.toolName) {
+        paramsInfo.toolName = inputParams.toolName;
+      }
+      
+      // 添加输入参数
+      if (inputParams.inputParameters) {
         paramsInfo.inputParameters = inputParams.inputParameters;
       } else {
         // 兼容旧格式，直接使用 inputParams 作为参数
