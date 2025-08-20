@@ -440,9 +440,9 @@ export class ComfyUIClient extends EventEmitter {
     const localPath = path.join(outputDir, outputFilename);
     await fs.writeFile(localPath, mediaBuffer);
     
-    // 如果提供了输入参数，保存 parameters.json
+    // 如果提供了输入参数，保存 input.json
     if (inputParams) {
-      const jsonPath = path.join(outputDir, 'parameters.json');
+      const jsonPath = path.join(outputDir, 'input.json');
       
       // 创建包含参数信息的 JSON 对象
       const paramsInfo: any = {
