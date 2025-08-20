@@ -406,45 +406,89 @@ export class ComfyUIClient extends EventEmitter {
     mediaBuffer: Buffer, 
     filename: string, 
     mediaType: 'images' | 'videos' | 'gifs' | 'audio' = 'images',
-    customOutputDir?: string
+    customOutputDir?: string,
+    inputParams?: Record<string, any>,
+    sessionTimestamp?: string
   ): Promise<string> {
+    // 从文件名中提取基础名称（去掉扩展名）
+    const ext = path.extname(filename);
+    const baseName = path.basename(filename, ext);
+    
+    // 使用会话时间戳或创建新的
+    const timestamp = sessionTimestamp || new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    
+    // 文件夹名 = 原始文件名 + 时间戳
+    const folderName = `${baseName}_${timestamp}`;
+    
     let outputDir: string;
     
     if (customOutputDir) {
-      // 使用用户指定的输出目录
-      outputDir = customOutputDir;
+      // 使用用户指定的输出目录，加上文件夹名
+      outputDir = path.join(customOutputDir, folderName);
     } else {
-      // 使用默认的项目输出目录
+      // 使用默认的项目输出目录，按类型和文件夹名分组
       const projectRoot = path.resolve(__dirname, '..');
-      outputDir = path.join(projectRoot, 'outputs', mediaType);
+      outputDir = path.join(projectRoot, 'outputs', mediaType, folderName);
     }
     
     // 确保输出目录存在
     await fs.mkdir(outputDir, { recursive: true });
     
-    // 为文件名添加时间戳以避免重名
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-    const ext = path.extname(filename);
-    const baseName = path.basename(filename, ext);
-    const uniqueFilename = `${baseName}_${timestamp}${ext}`;
+    // 将资源文件命名为 asset.扩展名
+    const outputFilename = `asset${ext}`;
     
-    const localPath = path.join(outputDir, uniqueFilename);
+    const localPath = path.join(outputDir, outputFilename);
     await fs.writeFile(localPath, mediaBuffer);
+    
+    // 如果提供了输入参数，保存 parameters.json
+    if (inputParams) {
+      const jsonPath = path.join(outputDir, 'parameters.json');
+      
+      // 创建包含参数信息的 JSON 对象
+      const paramsInfo: any = {
+        generatedAt: new Date().toISOString(),
+        originalFilename: filename,
+        mediaType: mediaType
+      };
+      
+      // 如果有工作流信息，添加到 JSON
+      if (inputParams.workflowName) {
+        paramsInfo.workflow = {
+          name: inputParams.workflowName,
+          category: inputParams.workflowCategory,
+          description: inputParams.workflowDescription
+        };
+        paramsInfo.inputParameters = inputParams.inputParameters;
+      } else {
+        // 兼容旧格式，直接使用 inputParams 作为参数
+        paramsInfo.inputParameters = inputParams;
+      }
+      
+      await fs.writeFile(jsonPath, JSON.stringify(paramsInfo, null, 2), 'utf-8');
+      
+      this.logger.info('参数 JSON 文件已保存', {
+        jsonPath,
+        folder: folderName
+      });
+    }
     
     this.logger.info(`${mediaType} 已保存到本地`, { 
       originalName: filename, 
       localPath, 
       type: mediaType,
-      customDir: customOutputDir || 'default' 
+      folder: folderName 
     });
     
     return localPath;
   }
 
-  public async executeWorkflow(workflow: any, outputDir?: string): Promise<any> {
+  public async executeWorkflow(workflow: any, outputDir?: string, inputParams?: Record<string, any>): Promise<any> {
     if (!this.connected) {
       await this.connect();
     }
+
+    // 为这个执行会话创建统一的时间戳
+    const sessionTimestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
 
     const queueResult = await this.queuePrompt(workflow);
     
@@ -525,7 +569,7 @@ export class ComfyUIClient extends EventEmitter {
                     );
                     
                     // 保存到对应的目录
-                    const localPath = await this.saveMediaToLocal(mediaBuffer, mediaInfo.filename, mediaType, outputDir);
+                    const localPath = await this.saveMediaToLocal(mediaBuffer, mediaInfo.filename, mediaType, outputDir, inputParams, sessionTimestamp);
                     
                     // 添加本地路径到返回结果
                     downloadedMedia.push({
@@ -561,7 +605,7 @@ export class ComfyUIClient extends EventEmitter {
                     );
                     
                     // 保存到本地
-                    const localPath = await this.saveMediaToLocal(videoBuffer, videoInfo.filename, 'videos', outputDir);
+                    const localPath = await this.saveMediaToLocal(videoBuffer, videoInfo.filename, 'videos', outputDir, inputParams, sessionTimestamp);
                     
                     // 添加本地路径到返回结果
                     downloadedVideos.push({
@@ -596,7 +640,7 @@ export class ComfyUIClient extends EventEmitter {
                     );
                     
                     // 保存到本地
-                    const localPath = await this.saveMediaToLocal(gifBuffer, gifInfo.filename, 'gifs');
+                    const localPath = await this.saveMediaToLocal(gifBuffer, gifInfo.filename, 'gifs', outputDir, inputParams, sessionTimestamp);
                     
                     // 添加本地路径到返回结果
                     downloadedGifs.push({
@@ -631,7 +675,7 @@ export class ComfyUIClient extends EventEmitter {
                     );
                     
                     // 保存到本地
-                    const localPath = await this.saveMediaToLocal(audioBuffer, audioInfo.filename, 'audio', outputDir);
+                    const localPath = await this.saveMediaToLocal(audioBuffer, audioInfo.filename, 'audio', outputDir, inputParams, sessionTimestamp);
                     
                     // 添加本地路径到返回结果
                     downloadedAudio.push({

@@ -136,7 +136,16 @@ class ComfyUIMCPServer {
       }
 
       try {
-        const result = await this.comfyClient.executeWorkflow(processedWorkflow, outputDirectory);
+        // 准备参数信息，包括工作流信息和用户输入的参数
+        const paramsInfo = {
+          workflowName: workflowName,
+          workflowCategory: workflow.category,
+          workflowDescription: workflow.description,
+          inputParameters: workflowArgs  // 只保存用户实际输入的参数
+        };
+        
+        // 传递参数信息以便保存到 JSON 文件
+        const result = await this.comfyClient.executeWorkflow(processedWorkflow, outputDirectory, paramsInfo);
         this.logger.info('工作流执行成功', result);
         
         return {
