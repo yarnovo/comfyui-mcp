@@ -452,7 +452,11 @@ export class ComfyUIClient extends EventEmitter {
       
       // 如果有工作流信息，添加到 JSON
       if (inputParams.workflowName) {
-        paramsInfo.workflow = inputParams.workflowName;
+        // 新格式：将 workflow 拆分为 workflowName 和 category
+        paramsInfo.workflow = {
+          name: inputParams.workflowName,
+          category: inputParams.workflowCategory || inputParams.category || 'unknown'
+        };
         paramsInfo.inputParameters = inputParams.inputParameters;
       } else {
         // 兼容旧格式，直接使用 inputParams 作为参数
