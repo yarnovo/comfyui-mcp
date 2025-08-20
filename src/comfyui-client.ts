@@ -446,18 +446,12 @@ export class ComfyUIClient extends EventEmitter {
       
       // 创建包含参数信息的 JSON 对象
       const paramsInfo: any = {
-        generatedAt: new Date().toISOString(),
-        originalFilename: filename,
-        mediaType: mediaType
+        generatedAt: new Date().toISOString()
       };
       
       // 如果有工作流信息，添加到 JSON
       if (inputParams.workflowName) {
-        paramsInfo.workflow = {
-          name: inputParams.workflowName,
-          category: inputParams.workflowCategory,
-          description: inputParams.workflowDescription
-        };
+        paramsInfo.workflow = inputParams.workflowName;
         paramsInfo.inputParameters = inputParams.inputParameters;
       } else {
         // 兼容旧格式，直接使用 inputParams 作为参数
