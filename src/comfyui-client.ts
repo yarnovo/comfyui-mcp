@@ -418,7 +418,9 @@ export class ComfyUIClient extends EventEmitter {
     const timestamp = sessionTimestamp || new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
     
     // 文件夹名 = 原始文件名 + 时间戳
-    const folderName = `${baseName}_${timestamp}`;
+    // 注意：不需要在 baseName 和 timestamp 之间添加下划线
+    // 因为 ComfyUI 返回的文件名（如 ComfyUI_00303_）本身已包含末尾的下划线
+    const folderName = `${baseName}${timestamp}`;
     
     let outputDir: string;
     
