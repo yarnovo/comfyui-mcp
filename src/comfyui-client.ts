@@ -446,7 +446,8 @@ export class ComfyUIClient extends EventEmitter {
       
       // 创建包含参数信息的 JSON 对象
       const paramsInfo: any = {
-        generatedAt: new Date().toISOString()
+        generatedAt: new Date().toISOString(),
+        originalFilename: filename
       };
       
       // 如果有工作流信息，添加到 JSON
