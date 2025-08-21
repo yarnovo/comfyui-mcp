@@ -449,6 +449,10 @@ cp path/to/exported.json workflows/text-to-image/my_workflow/workflow.json
 - 生成、转换、修改、增强、优化、创建
 - 自定义、调节、控制、设置
 
+### 📖 相关文档
+
+- [Negative Prompt 使用规范](docs/negative_prompt_guide.md) - 了解如何正确编写负向提示词
+
 ### ✔️ 添加工作流前的检查清单
 
 在添加新工作流前，请确保：
