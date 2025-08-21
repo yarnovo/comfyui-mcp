@@ -1,0 +1,103 @@
+{
+  "description": "使用 Qwen Image Edit 模型的专业图像编辑工作流。基于 Qwen 2.5 VL 7B 多模态大语言模型，通过自然语言描述精确控制图像编辑。采用 CFGNorm 和 AuraFlow 采样技术，实现高质量的图像局部编辑和全局风格转换。支持去除图像元素、修改场景属性、调整视觉效果等多种编辑操作。模型使用 FP8 量化优化，在保持编辑质量的同时提供更快的推理速度。特别适合UI元素去除、场景清理、艺术风格化、精确图像修改等专业应用场景。",
+  "category": "image-to-image",
+  "parameters": [
+    {
+      "name": "input_image",
+      "type": "string",
+      "subtype": "image",
+      "description": "需要编辑的输入图像路径，支持 jpg、png 等常见格式",
+      "required": true,
+      "path": "78.inputs.image",
+      "default": ""
+    },
+    {
+      "name": "positive_prompt",
+      "type": "string",
+      "description": "编辑指令，描述想要对图像进行的修改，如去除元素、修改属性等",
+      "required": true,
+      "path": "76.inputs.prompt",
+      "default": ""
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "负面提示词，描述要避免的编辑效果（通常留空）",
+      "required": false,
+      "path": "77.inputs.prompt",
+      "default": null
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于控制生成结果的可重复性，-1 表示随机",
+      "required": false,
+      "path": "3.inputs.seed",
+      "default": 976480016588017
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数，影响编辑质量和细节，建议 15-25",
+      "required": false,
+      "path": "3.inputs.steps",
+      "default": 20
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "CFG 引导强度，控制编辑指令的遵循程度，建议 2-4",
+      "required": false,
+      "path": "3.inputs.cfg",
+      "default": 2.5
+    },
+    {
+      "name": "denoise",
+      "type": "number",
+      "description": "去噪强度，控制编辑强度，1.0 为完全重建",
+      "required": false,
+      "path": "3.inputs.denoise",
+      "default": 1
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称，不同采样器有不同的编辑特性",
+      "required": false,
+      "path": "3.inputs.sampler_name",
+      "default": "euler"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型，影响采样过程的噪声调度",
+      "required": false,
+      "path": "3.inputs.scheduler",
+      "default": "simple"
+    },
+    {
+      "name": "shift",
+      "type": "number",
+      "description": "AuraFlow 采样算法的偏移值，影响编辑的视觉风格",
+      "required": false,
+      "path": "66.inputs.shift",
+      "default": 3
+    },
+    {
+      "name": "megapixels",
+      "type": "number",
+      "description": "图像缩放目标百万像素数，控制处理分辨率",
+      "required": false,
+      "path": "93.inputs.megapixels",
+      "default": 1
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出文件名前缀，用于保存编辑后的图像",
+      "required": false,
+      "path": "60.inputs.filename_prefix",
+      "default": "ComfyUI"
+    }
+  ]
+}

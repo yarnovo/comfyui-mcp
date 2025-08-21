@@ -271,11 +271,19 @@ export class WorkflowManager {
       }
     }
     
-    // 自动为所有工具添加 output_dir 参数
+    // 自动为所有工具添加 output_dir 参数（必填）
     properties['output_dir'] = {
       type: 'string',
-      description: '指定输出文件的保存目录（绝对路径）。如果不提供，将保存到默认的 outputs 目录',
+      description: '指定输出文件的保存目录（必填，绝对路径）。输出文件将保存在 output_dir/output_name/ 目录下',
     };
+    required.push('output_dir');
+    
+    // 自动为所有工具添加 output_name 参数（必填）
+    properties['output_name'] = {
+      type: 'string',
+      description: '指定输出文件夹的名称（必填）。输出文件将保存在 output_dir/output_name/ 目录下',
+    };
+    required.push('output_name');
     
     return {
       type: 'object',

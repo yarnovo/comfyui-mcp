@@ -117,23 +117,31 @@ class ComfyUIMCPServer {
         inputs: args,
       });
       
-      // 提取 output_dir 参数（如果提供）
-      const { output_dir, ...workflowArgs } = args || {};
+      // 提取 output_dir 和 output_name 参数
+      const { output_dir, output_name, ...workflowArgs } = args || {};
       
       // 处理工作流输入（支持自动上传图片）
       const processedWorkflow = await this.workflowManager.processWorkflowInputs(
         workflow,
-        workflowArgs,  // 传入不包含 output_dir 的参数
+        workflowArgs,  // 传入不包含 output_dir 和 output_name 的参数
         this.comfyClient  // 传入 client 以支持自动上传
       );
       
       this.logger.debug('处理后的工作流', processedWorkflow);
       
-      // 确保 output_dir 是字符串类型或 undefined
+      // 确保 output_dir 是字符串类型（必填参数）
       const outputDirectory = typeof output_dir === 'string' ? output_dir : undefined;
-      if (outputDirectory) {
-        this.logger.info(`使用自定义输出目录: ${outputDirectory}`);
+      if (!outputDirectory) {
+        throw new Error('output_dir 参数是必填的，请提供输出目录的绝对路径');
       }
+      this.logger.info(`使用输出目录: ${outputDirectory}`);
+      
+      // 确保 output_name 是字符串类型（必填参数）
+      const outputFolderName = typeof output_name === 'string' ? output_name : undefined;
+      if (!outputFolderName) {
+        throw new Error('output_name 参数是必填的，请提供输出文件夹名称');
+      }
+      this.logger.info(`输出文件夹名称: ${outputFolderName}`);
 
       try {
         // 准备参数信息，包括工作流信息和用户输入的参数
@@ -144,8 +152,13 @@ class ComfyUIMCPServer {
           inputParameters: workflowArgs  // 只保存用户实际输入的参数
         };
         
-        // 传递参数信息以便保存到 JSON 文件
-        const result = await this.comfyClient.executeWorkflow(processedWorkflow, outputDirectory, paramsInfo);
+        // 传递参数信息和输出文件夹名称
+        const result = await this.comfyClient.executeWorkflow(
+          processedWorkflow, 
+          outputDirectory, 
+          paramsInfo,
+          outputFolderName  // 传递输出文件夹名称
+        );
         this.logger.info('工作流执行成功', result);
         
         return {
