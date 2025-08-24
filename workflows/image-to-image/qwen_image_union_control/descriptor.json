@@ -1,0 +1,127 @@
+{
+  "description": "使用 Qwen Image 模型结合 Union Control 技术的高级图像编辑工作流。基于 Qwen 2.5 VL 7B 多模态模型，通过 Canny 边缘检测提供精确的结构控制，配合 Union DiffSynth LoRA 微调实现高质量的条件生成。采用 ReferenceLatent 技术处理正负提示词条件，结合 AuraFlow 采样算法优化生成效果。支持基于边缘轮廓的精确图像重绘、风格迁移、结构保持的艺术创作等。特别适合需要保持原图结构的创意编辑、线稿上色、建筑渲染、产品设计可视化等专业应用场景。",
+  "category": "image-to-image",
+  "parameters": [
+    {
+      "name": "input_image",
+      "type": "string",
+      "subtype": "image",
+      "description": "需要编辑的输入图像路径，将提取其边缘信息作为控制条件，支持 jpg、png 等常见格式",
+      "required": true,
+      "path": "73.inputs.image",
+      "default": ""
+    },
+    {
+      "name": "positive_prompt",
+      "type": "string",
+      "description": "正面提示词，描述想要生成的图像内容、风格和细节",
+      "required": true,
+      "path": "6.inputs.text",
+      "default": ""
+    },
+    {
+      "name": "negative_prompt",
+      "type": "string",
+      "description": "负面提示词，描述要避免的元素或效果",
+      "required": false,
+      "path": "7.inputs.text",
+      "default": null
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于控制生成结果的可重复性，-1 表示随机",
+      "required": false,
+      "path": "3.inputs.seed",
+      "default": 685046142015154
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "采样步数，影响生成质量和细节，建议 15-30",
+      "required": false,
+      "path": "3.inputs.steps",
+      "default": 20
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "CFG 引导强度，控制提示词的影响程度，建议 2-4",
+      "required": false,
+      "path": "3.inputs.cfg",
+      "default": 2.5
+    },
+    {
+      "name": "denoise",
+      "type": "number",
+      "description": "去噪强度，控制生成的变化程度，1.0 为完全重新生成",
+      "required": false,
+      "path": "3.inputs.denoise",
+      "default": 1
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称，不同采样器有不同的生成特性",
+      "required": false,
+      "path": "3.inputs.sampler_name",
+      "default": "euler"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型，影响采样过程的噪声调度",
+      "required": false,
+      "path": "3.inputs.scheduler",
+      "default": "simple"
+    },
+    {
+      "name": "shift",
+      "type": "number",
+      "description": "AuraFlow 采样算法的偏移值，影响生成的风格和细节表现",
+      "required": false,
+      "path": "66.inputs.shift",
+      "default": 3.1
+    },
+    {
+      "name": "lora_strength",
+      "type": "number",
+      "description": "LoRA 模型强度，控制 Union DiffSynth LoRA 的影响程度",
+      "required": false,
+      "path": "69.inputs.strength_model",
+      "default": 1
+    },
+    {
+      "name": "canny_low_threshold",
+      "type": "number",
+      "description": "Canny 边缘检测低阈值，影响边缘检测的敏感度",
+      "required": false,
+      "path": "74.inputs.low_threshold",
+      "default": 0.4
+    },
+    {
+      "name": "canny_high_threshold",
+      "type": "number",
+      "description": "Canny 边缘检测高阈值，控制边缘的连续性",
+      "required": false,
+      "path": "74.inputs.high_threshold",
+      "default": 0.8
+    },
+    {
+      "name": "megapixels",
+      "type": "number",
+      "description": "图像缩放目标百万像素数，控制处理分辨率",
+      "required": false,
+      "path": "77.inputs.megapixels",
+      "default": 1
+    },
+    {
+      "name": "filename_prefix",
+      "type": "string",
+      "description": "输出文件名前缀，用于保存生成的图像",
+      "required": false,
+      "path": "60.inputs.filename_prefix",
+      "default": "ComfyUI"
+    }
+  ]
+}
