@@ -1,23 +1,22 @@
 {
-  "name": "wan2_2_14b_i2v",
-  "description": "使用 WAN 2.2 14B 模型将单张静态图片智能转换为动态视频的专业工具。该工作流采用双阶段去噪架构，通过高噪声和低噪声两个14B参数模型的协同处理，基于输入图片和文本描述生成连贯流畅的视频动画。特别擅长让静态图片中的人物、物体和场景动起来，支持镜头运动、角色动作、环境变化等多种动态效果。适合制作产品展示、角色动画、场景演示等创意视频内容。",
+  "description": "使用 WAN 2.2 14B 模型将单张静态图片智能转换为动态视频的专业工具。该工作流采用双阶段去噪策略，通过高噪声和低噪声两个14B参数模型的协同处理，基于输入图片和文本描述生成连贯流畅的视频动画。特别擅长让静态图片中的人物、物体和场景动起来，支持镜头运动、角色动作、环境变化等多种动态效果。适合制作产品展示、角色动画、场景演示等创意视频内容。",
   "category": "image-to-video",
   "parameters": [
     {
       "name": "positive_prompt",
       "type": "string",
-      "description": "描述视频中的动作、镜头运动和场景变化，如：人物转身、镜头推进、环境动态等",
+      "description": "正面提示词，描述视频中的动作、运动轨迹和场景变化",
       "required": true,
-      "default": "",
-      "path": "6.inputs.text"
+      "path": "93.inputs.text",
+      "default": ""
     },
     {
       "name": "negative_prompt",
       "type": "string",
-      "description": "负向提示词，描述不想要出现的内容，如：静止、模糊、抖动、变形等",
+      "description": "负面提示词，描述不想要的效果（直接列出，不用否定词）",
       "required": false,
-      "default": null,
-      "path": "7.inputs.text"
+      "path": "89.inputs.text",
+      "default": null
     },
     {
       "name": "input_image",
@@ -25,157 +24,120 @@
       "subtype": "image",
       "description": "输入的静态图片路径，将作为视频的起始画面",
       "required": true,
-      "default": "",
-      "path": "62.inputs.image"
+      "path": "97.inputs.image",
+      "default": ""
     },
     {
       "name": "width",
       "type": "number",
-      "description": "视频宽度（像素）",
+      "description": "视频宽度（像素），建议使用16的倍数以获得最佳效果",
       "required": false,
-      "default": 640,
-      "min": 256,
-      "max": 1024,
-      "path": "63.inputs.width"
+      "path": "98.inputs.width",
+      "default": 640
     },
     {
       "name": "height",
       "type": "number",
-      "description": "视频高度（像素）",
+      "description": "视频高度（像素），建议使用16的倍数以获得最佳效果",
       "required": false,
-      "default": 640,
-      "min": 256,
-      "max": 1024,
-      "path": "63.inputs.height"
+      "path": "98.inputs.height",
+      "default": 640
     },
     {
       "name": "length",
       "type": "number",
-      "description": "视频帧数，决定视频时长和流畅度",
+      "description": "视频帧数，决定视频时长和动画流畅度，81帧约5秒(16fps)",
       "required": false,
-      "default": 81,
-      "min": 16,
-      "max": 128,
-      "path": "63.inputs.length"
-    },
-    {
-      "name": "fps",
-      "type": "number",
-      "description": "视频帧率，每秒显示的帧数",
-      "required": false,
-      "default": 16,
-      "min": 8,
-      "max": 60,
-      "path": "60.inputs.fps"
-    },
-    {
-      "name": "seed",
-      "type": "number",
-      "description": "随机种子，用于生成结果的可重复性",
-      "required": false,
-      "default": 1042664824122032,
-      "min": 0,
-      "max": 999999999999999,
-      "path": "57.inputs.noise_seed"
-    },
-    {
-      "name": "steps",
-      "type": "number",
-      "description": "采样步数，影响生成质量和细节",
-      "required": false,
-      "default": 20,
-      "min": 10,
-      "max": 50,
-      "path": "57.inputs.steps"
-    },
-    {
-      "name": "cfg",
-      "type": "number",
-      "description": "分类器引导强度，控制提示词对生成的影响程度",
-      "required": false,
-      "default": 3.5,
-      "min": 1,
-      "max": 20,
-      "path": "57.inputs.cfg"
-    },
-    {
-      "name": "sampler_name",
-      "type": "string",
-      "description": "采样器名称",
-      "required": false,
-      "default": "euler",
-      "enum": ["euler", "euler_ancestral", "heun", "dpm_2", "dpm_2_ancestral", "lms", "dpm_fast", "dpm_adaptive"],
-      "path": "57.inputs.sampler_name"
-    },
-    {
-      "name": "scheduler",
-      "type": "string",
-      "description": "调度器类型",
-      "required": false,
-      "default": "simple",
-      "enum": ["normal", "karras", "exponential", "sgm_uniform", "simple"],
-      "path": "57.inputs.scheduler"
-    },
-    {
-      "name": "shift",
-      "type": "number",
-      "description": "SD3 采样算法的偏移值，影响生成的风格和细节",
-      "required": false,
-      "default": 8,
-      "min": 0,
-      "max": 20,
-      "path": "54.inputs.shift"
+      "path": "98.inputs.length",
+      "default": 81
     },
     {
       "name": "batch_size",
       "type": "number",
       "description": "批次大小，一次生成多少个视频",
       "required": false,
-      "default": 1,
-      "min": 1,
-      "max": 4,
-      "path": "63.inputs.batch_size"
+      "path": "98.inputs.batch_size",
+      "default": 1
+    },
+    {
+      "name": "seed",
+      "type": "number",
+      "description": "随机种子，用于生成结果的可重复性，-1表示随机",
+      "required": false,
+      "path": "86.inputs.noise_seed",
+      "default": 138073435077572
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "description": "总采样步数，分配给两个阶段，更多步数质量更好但速度更慢",
+      "required": false,
+      "path": "86.inputs.steps",
+      "default": 4
+    },
+    {
+      "name": "cfg",
+      "type": "number",
+      "description": "CFG引导强度，控制提示词的影响程度",
+      "required": false,
+      "path": "86.inputs.cfg",
+      "default": 1
+    },
+    {
+      "name": "sampler_name",
+      "type": "string",
+      "description": "采样器名称，两阶段使用相同采样器",
+      "required": false,
+      "path": "86.inputs.sampler_name",
+      "default": "euler"
+    },
+    {
+      "name": "scheduler",
+      "type": "string",
+      "description": "调度器类型，控制采样过程的噪声调度",
+      "required": false,
+      "path": "86.inputs.scheduler",
+      "default": "simple"
+    },
+    {
+      "name": "shift",
+      "type": "number",
+      "description": "SD3采样算法的偏移值，影响生成的细节和风格",
+      "required": false,
+      "path": "103.inputs.shift",
+      "default": 5.000000000000001
+    },
+    {
+      "name": "fps",
+      "type": "number",
+      "description": "视频帧率（每秒帧数）",
+      "required": false,
+      "path": "94.inputs.fps",
+      "default": 16
     },
     {
       "name": "filename_prefix",
       "type": "string",
       "description": "输出视频文件名前缀",
       "required": false,
-      "default": "video/ComfyUI",
-      "path": "61.inputs.filename_prefix"
+      "path": "108.inputs.filename_prefix",
+      "default": "video/ComfyUI"
     },
     {
       "name": "video_format",
       "type": "string",
       "description": "视频格式",
       "required": false,
-      "default": "auto",
-      "enum": ["auto", "mp4", "webm", "avi"],
-      "path": "61.inputs.format"
+      "path": "108.inputs.format",
+      "default": "auto"
     },
     {
       "name": "codec",
       "type": "string",
       "description": "视频编码器",
       "required": false,
-      "default": "auto",
-      "enum": ["auto", "h264", "h265", "vp9"],
-      "path": "61.inputs.codec"
+      "path": "108.inputs.codec",
+      "default": "auto"
     }
-  ],
-  "models": {
-    "unet_high_noise": "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
-    "unet_low_noise": "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors",
-    "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
-    "vae": "wan_2.1_vae.safetensors"
-  },
-  "tags": [
-    "image-to-video",
-    "wan",
-    "animation",
-    "video-generation",
-    "14b-model"
-  ],
-  "output_node": "61",
-  "version": "1.0.0"
+  ]
 }

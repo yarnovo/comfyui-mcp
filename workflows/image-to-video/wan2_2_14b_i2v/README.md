@@ -1,143 +1,128 @@
-# WAN 2.2 14B 图像到视频生成工作流
+# WAN 2.2 14B I2V 工作流
 
 ## 概述
 
-这是一个使用 WAN 2.2 14B 模型将单张静态图片转换为动态视频的专业工作流。只需提供一张图片和动作描述，即可生成流畅自然的视频动画，让静态图像"活"起来。
+使用 WAN 2.2 14B 模型将单张静态图片智能转换为动态视频的专业工具。该工作流采用创新的双阶段去噪架构，通过高噪声和低噪声两个14B参数模型的协同处理，实现高质量的图像动画化效果。
 
 ## 工作流特点
 
-- **双阶段去噪架构**：采用高噪声和低噪声两个14B参数模型协同处理
-- **智能动作生成**：基于文本描述自动生成合理的动作和镜头运动
-- **高质量输出**：支持640x640分辨率，可生成最多81帧的流畅视频
-- **单图输入**：仅需一张静态图片即可生成动态视频
-- **灵活控制**：通过提示词精确控制动作类型和镜头效果
+- **双模型架构**：高噪声模型构建基础动态，低噪声模型精化细节
+- **14B参数规模**：每个阶段都使用14B参数模型，确保生成质量
+- **LoRA优化**：配备专门的4步LoRA模型，加速生成过程
+- **文本精确控制**：通过详细描述控制动画效果和运动轨迹
+- **T5-XXL编码器**：使用先进的文本编码器理解复杂指令
+- **SD3采样算法**：优化的采样策略提升视觉效果
 
 ## 主要参数
 
 | 参数名 | 类型 | 必填 | 默认值 | 说明 |
 |--------|------|------|--------|------|
-| positive_prompt | string | ✅ | - | 描述视频中的动作和镜头运动 |
-| negative_prompt | string | ❌ | null | 负向提示词，避免出现的内容 |
+| positive_prompt | string | ✅ | - | 描述视频中的动作、运动和场景变化 |
+| negative_prompt | string | ❌ | null | 不想要的效果（直接列出，不用否定词） |
 | input_image | string | ✅ | - | 输入的静态图片路径 |
 | width | number | ❌ | 640 | 视频宽度（像素） |
 | height | number | ❌ | 640 | 视频高度（像素） |
-| length | number | ❌ | 81 | 视频帧数 |
+| length | number | ❌ | 81 | 视频帧数，81帧约5秒(16fps) |
+| steps | number | ❌ | 4 | 总采样步数 |
+| cfg | number | ❌ | 1 | CFG引导强度 |
 | fps | number | ❌ | 16 | 视频帧率 |
-| seed | number | ❌ | 1042664824122032 | 随机种子 |
-| steps | number | ❌ | 20 | 采样步数 |
-| cfg | number | ❌ | 3.5 | 分类器引导强度 |
+| seed | number | ❌ | 138073435077572 | 随机种子，-1表示随机 |
+| output_dir | string | ❌ | 系统自动提供 | 输出目录路径 |
+| output_name | string | ❌ | 系统自动提供 | 输出文件夹名称 |
 
 ## 使用示例
 
-### 基础用法
+### 基础使用
 
-```python
-from comfyui_mcp import run_workflow
-
-result = run_workflow(
-    "wan2_2_14b_i2v",
-    positive_prompt="人物缓慢转身，微笑着挥手，背景轻微晃动",
-    input_image="/path/to/portrait.png"
-)
+```javascript
+const result = await runWorkflow('wan2_2_14b_i2v', {
+  positive_prompt: "The white dragon warrior stands still, eyes full of determination and strength. The camera slowly moves closer or circles around the warrior, highlighting the powerful presence and heroic spirit of the character.",
+  negative_prompt: "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止",
+  input_image: "path/to/your/image.jpg"
+});
 ```
 
-### 高级用法
+### 角色动画
 
-```python
-result = run_workflow(
-    "wan2_2_14b_i2v",
-    positive_prompt="白龙战士站立不动，眼神充满决心和力量。镜头缓慢推进或环绕战士，凸显角色的强大气场和英雄气概",
-    negative_prompt="静止不动，画面抖动，变形，模糊",
-    input_image="/path/to/warrior.png",
-    width=640,
-    height=640,
-    length=81,
-    fps=24,
-    steps=25,
-    cfg=4.0
-)
+```javascript
+const result = await runWorkflow('wan2_2_14b_i2v', {
+  positive_prompt: "角色缓缓转身看向镜头，表情从严肃变为微笑，头发和衣服自然飘动，光影变化细腻",
+  negative_prompt: "静止不动，突兀变化，不自然，模糊，闪烁",
+  input_image: "character.png",
+  width: 768,
+  height: 768,
+  length: 97,
+  fps: 24
+});
 ```
 
-## 适用场景
+### 产品展示
 
-1. **角色动画**
-   - 人物肖像动态化
-   - 角色动作展示
-   - 表情变化动画
+```javascript
+const result = await runWorkflow('wan2_2_14b_i2v', {
+  positive_prompt: "产品360度匀速旋转展示，表面材质和光泽清晰可见，背景虚化突出产品",
+  negative_prompt: "背景杂乱，静止，跳跃，不连续",
+  input_image: "product.jpg",
+  width: 1024,
+  height: 576,
+  output_dir: "/custom/output/path",
+  output_name: "product_demo"
+});
+```
 
-2. **产品展示**
-   - 产品360度旋转
-   - 功能演示动画
-   - 材质细节展示
+### 风景动画
 
-3. **场景动效**
-   - 风景动态化
-   - 建筑展示
-   - 环境氛围营造
+```javascript
+const result = await runWorkflow('wan2_2_14b_i2v', {
+  positive_prompt: "云朵缓缓飘动，树叶随风摇曳，水面泛起涟漪，阳光穿透云层产生动态光影",
+  negative_prompt: "静态场景，不自然运动，画面撕裂",
+  input_image: "landscape.jpg",
+  length: 129,
+  seed: -1
+});
+```
 
-4. **创意内容**
-   - 艺术作品动态化
-   - 概念设计展示
-   - 视觉特效制作
+## 提示词技巧
 
-## 提示词编写技巧
+### 动作描述
+- 使用具体动词：转身、行走、飘动、旋转等
+- 指定速度和节奏：缓慢、快速、匀速、有节奏等
+- 描述运动路径：直线、弧线、环绕、上升等
 
-### 镜头运动
-- **推进/拉远**："camera slowly zooms in/out"
-- **环绕**："camera circles around the subject"
-- **平移**："camera pans left/right"
-- **俯仰**："camera tilts up/down"
+### 镜头语言
+- 镜头运动：推进、拉远、平移、环绕
+- 焦点变化：对焦、虚化、景深变化
+- 视角切换：俯视、仰视、侧视
 
-### 角色动作
-- **微小动作**："subtle head movement", "gentle breathing"
-- **表情变化**："slowly smiling", "eyes looking around"
-- **肢体动作**："raising hand", "turning body"
-
-### 环境效果
-- **自然元素**："clouds drifting", "leaves swaying"
-- **光影变化**："light shifting", "shadows moving"
-- **氛围营造**："fog rolling in", "dust particles floating"
+### 环境互动
+- 自然元素：风吹、水流、光影变化
+- 物理效果：重力、惯性、弹性
+- 氛围营造：烟雾、粒子、光效
 
 ## 注意事项
 
-1. **图片要求**
-   - 使用高质量、清晰的输入图片
-   - 避免过于复杂或杂乱的背景
-   - 人物或主体应清晰可见
+1. **图像准备**：输入图像应清晰且主体明确，避免过于复杂的背景
+2. **分辨率选择**：640x640是默认最优分辨率，更高分辨率可能需要更多显存
+3. **帧数设置**：81帧适合大多数场景，更长动画可增加到129或161帧
+4. **采样步数**：默认4步已经优化，无需调整除非追求极致质量
+5. **负面提示词**：记住直接列出不需要的内容，不要使用"不要"等否定词
 
-2. **提示词优化**
-   - 使用具体、描述性的语言
-   - 避免矛盾或不合理的动作描述
-   - 可以结合镜头语言增强效果
+## 技术规格
 
-3. **参数调节**
-   - cfg 值建议在3-5之间，过高可能导致过度依赖提示词
-   - steps 增加可提升细节但会延长生成时间
-   - length 决定视频时长，建议根据动作复杂度调整
+- **主模型（高噪声）**：wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors
+- **主模型（低噪声）**：wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors
+- **LoRA模型（高噪声）**：wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors
+- **LoRA模型（低噪声）**：wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors
+- **文本编码器**：umt5_xxl_fp8_e4m3fn_scaled.safetensors
+- **VAE模型**：wan_2.1_vae.safetensors
 
-4. **性能考虑**
-   - 该工作流使用14B参数模型，需要较大显存（建议16GB以上）
-   - 支持 FP8 精度以优化内存使用
-   - 生成时间与帧数成正比
+## 适用场景
 
-## 模型信息
-
-- **UNet 高噪声模型**: wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors
-- **UNet 低噪声模型**: wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors
-- **CLIP 模型**: umt5_xxl_fp8_e4m3fn_scaled.safetensors
-- **VAE 模型**: wan_2.1_vae.safetensors
-
-## 常见问题
-
-**Q: 为什么生成的视频动作不明显？**
-A: 尝试使用更具体的动作描述，增加 cfg 值，或选择动作潜力更大的输入图片。
-
-**Q: 如何获得更流畅的动画？**
-A: 增加 length 参数生成更多帧，或提高 fps 参数。
-
-**Q: 视频中出现闪烁或抖动怎么办？**
-A: 在负向提示词中添加 "flickering, jittering, unstable"，并适当降低 cfg 值。
-
-## 更新日志
-
-- v1.0.0 (2024-01) - 初始版本，支持 WAN 2.2 14B 模型图像到视频生成
+- 电商产品动态展示
+- 游戏角色动作设计
+- 电影概念预览
+- 社交媒体创意内容
+- 教育演示动画
+- 艺术作品动态化
+- 建筑效果展示
+- 时尚服装展示
