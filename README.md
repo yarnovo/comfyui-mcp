@@ -67,9 +67,9 @@ node test-connection.js
 
 编辑 Claude Desktop 配置文件：
 
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`  
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
-**Linux**: `~/.config/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`  
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
 
 添加 MCP 服务器配置（使用绝对路径）：
 
@@ -117,8 +117,10 @@ node test-connection.js
 
 重启 Claude Desktop 后，在对话中输入：
 ```
-使用 run_text_to_image_workflow_image_qwen_image 工具生成一张图片
+使用 Qwen 模型生成一张中国山水画
 ```
+
+Claude 会自动识别并调用对应的工具。
 
 ### 6. 使用自定义输出目录
 
@@ -137,21 +139,31 @@ output_dir: "/home/username/my_images"
 
 ```
 workflows/
-├── text-to-image/              # 文本生成图像
-│   ├── image_qwen_image/       # Qwen 模型
-│   ├── image_omnigen2_t2i/     # OmniGen2 模型
-│   └── flux_schnell/            # FLUX.1 Schnell 模型
-├── image-to-image/             # 图像转图像
-│   └── image2image/             # 图生图工作流
-├── image-to-video/             # 图像生成视频
-│   └── image_to_video_wan/     # WAN 2.1 模型
-└── text-to-audio/              # 文本生成音频
-    └── audio_stable_audio/      # Stable Audio 模型
+├── text-to-image/                      # 文本生成图像
+│   └── image_qwen_image/               # Qwen 视觉语言模型
+├── image-to-image/                     # 图像转图像/编辑
+│   ├── omnigen2_image_edit/            # OmniGen2 智能编辑
+│   ├── qwen_image_edit/                # Qwen 图像编辑
+│   ├── qwen_image_controlnet_patch/    # Qwen + ControlNet Patch
+│   ├── qwen_image_instantx_controlnet/ # Qwen + InstantX ControlNet
+│   ├── qwen_image_union_control/       # Qwen + Union Control
+│   ├── rmbg_multiple_models/           # 多模型背景移除
+│   └── yolo_cropper/                   # YOLO 智能裁剪
+├── image-to-video/                     # 图像生成视频
+│   ├── wan2_2_14b_i2v/                 # WAN 2.2 14B 图生视频
+│   └── wan2_2_14b_flf2v/               # WAN 2.2 14B 首尾帧插值
+├── text-to-video/                      # 文本生成视频
+│   └── wan2_2_14b_t2v/                 # WAN 2.2 14B 文生视频
+├── text-to-audio/                      # 文本生成音频
+│   ├── audio_ace_step_1_t2a_instrumentals/ # ACE 纯器乐生成
+│   └── audio_ace_step_1_t2a_song/      # ACE 带歌词音乐生成
+└── audio-to-audio/                     # 音频编辑
+    └── audio_ace_step_1_a2a_editing/   # ACE 音频编辑
 
 每个工作流文件夹包含：
-├── workflow.json               # ComfyUI 导出的工作流 JSON（统一命名）
-├── descriptor.json             # 参数描述文件（包含分类信息）
-└── README.md                   # 工作流详细说明（可选）
+├── workflow.json                       # ComfyUI 导出的工作流 JSON（统一命名）
+├── descriptor.json                     # 参数描述文件（包含分类信息）
+└── README.md                           # 工作流详细说明（可选）
 ```
 
 ### 描述文件格式
@@ -193,9 +205,11 @@ workflows/
 
 根据工作流类型选择正确的分类目录：
 - `text-to-image/` - 文本生成图像
-- `image-to-image/` - 图像转换
-- `image-to-video/` - 图像生成视频  
-- `text-to-audio/` - 文本生成音频
+- `image-to-image/` - 图像编辑、转换、处理
+- `image-to-video/` - 图像生成视频
+- `text-to-video/` - 文本生成视频
+- `text-to-audio/` - 文本生成音频/音乐
+- `audio-to-audio/` - 音频编辑、风格转换
 
 ```bash
 # 例如添加一个新的文生图工作流
@@ -324,7 +338,9 @@ cp path/to/exported.json workflows/text-to-image/my_workflow/workflow.json
 | text-to-image | 根据文本生成图像 | run_text_to_image_workflow_[name] |
 | image-to-image | 修改或转换现有图像 | run_image_to_image_workflow_[name] |
 | image-to-video | 静态图像转动态视频 | run_image_to_video_workflow_[name] |
+| text-to-video | 根据文本生成视频 | run_text_to_video_workflow_[name] |
 | text-to-audio | 根据文本生成音频/音乐 | run_text_to_audio_workflow_[name] |
+| audio-to-audio | 编辑或转换现有音频 | run_audio_to_audio_workflow_[name] |
 
 ### 步骤 4：创建 README.md（可选但推荐）
 
@@ -541,35 +557,70 @@ node /home/username/comfyui-mcp/dist/index.js
 
 ## 示例工作流
 
-项目包含多个分类的工作流，每个工具名称包含其分类信息：
+项目包含多个分类的专业工作流：
 
 ### 文本生成图像 (text-to-image)
-- `run_text_to_image_workflow_image_qwen_image` - Qwen 模型
-- `run_text_to_image_workflow_image_omnigen2_t2i` - OmniGen2 模型  
-- `run_text_to_image_workflow_flux_schnell` - FLUX.1 Schnell 模型
+- `run_text_to_image_workflow_image_qwen_image` - Qwen 视觉语言模型，支持中英文提示词
 
-### 图像转图像 (image-to-image)
-- `run_image_to_image_workflow_image2image` - 图生图工作流
+### 图像编辑与处理 (image-to-image)
+- `run_image_to_image_workflow_omnigen2_image_edit` - OmniGen2 多模态图像编辑
+- `run_image_to_image_workflow_qwen_image_edit` - Qwen 智能图像编辑
+- `run_image_to_image_workflow_qwen_image_controlnet_patch` - Qwen + ControlNet 精确控制
+- `run_image_to_image_workflow_qwen_image_instantx_controlnet` - Qwen + InstantX 深度控制
+- `run_image_to_image_workflow_qwen_image_union_control` - Qwen + Union Control 边缘控制
+- `run_image_to_image_workflow_rmbg_multiple_models` - 多模型背景移除
+- `run_image_to_image_workflow_yolo_cropper` - YOLO 智能物体检测与裁剪
 
-### 图像生成视频 (image-to-video)
-- `run_image_to_video_workflow_image_to_video_wan` - WAN 2.1 模型
+### 视频生成 (image-to-video & text-to-video)
+- `run_image_to_video_workflow_wan2_2_14b_i2v` - WAN 2.2 14B 图片转动态视频
+- `run_image_to_video_workflow_wan2_2_14b_flf2v` - WAN 2.2 14B 首尾帧智能插值
+- `run_text_to_video_workflow_wan2_2_14b_t2v` - WAN 2.2 14B 文本生成视频
 
-### 文本生成音频 (text-to-audio)
-- `run_text_to_audio_workflow_audio_stable_audio` - Stable Audio 模型
+### 音频与音乐生成 (text-to-audio & audio-to-audio)
+- `run_text_to_audio_workflow_audio_ace_step_1_t2a_instrumentals` - ACE 纯器乐音乐生成
+- `run_text_to_audio_workflow_audio_ace_step_1_t2a_song` - ACE 带歌词歌曲生成
+- `run_audio_to_audio_workflow_audio_ace_step_1_a2a_editing` - ACE 音频智能编辑
 
 使用示例：
-```
+```python
 # 文本生成图像
-run_text_to_image_workflow_flux_schnell:
-  positive_prompt: "一个美丽的风景画"
+run_text_to_image_workflow_image_qwen_image:
+  prompt: "山水画，中国传统风格，青山绿水"
   width: 1024
   height: 1024
+  output_dir: "/home/user/outputs"
+  output_name: "chinese_painting"
 
-# 图像转图像
-run_image_to_image_workflow_image2image:
+# 智能图像编辑
+run_image_to_image_workflow_qwen_image_edit:
   input_image: "/path/to/image.jpg"
-  positive_prompt: "油画风格"
-  denoise: 0.6
+  positive_prompt: "去除图片中的文字水印"
+  output_dir: "/home/user/outputs"
+  output_name: "clean_image"
+
+# 背景移除
+run_image_to_image_workflow_rmbg_multiple_models:
+  input_image: "/path/to/product.jpg"
+  model: "BEN2"
+  output_dir: "/home/user/outputs"
+  output_name: "transparent_bg"
+
+# 图片生成视频
+run_image_to_video_workflow_wan2_2_14b_i2v:
+  input_image: "/path/to/landscape.jpg"
+  positive_prompt: "缓慢的云朵飘动，阳光穿过云层"
+  length: 81
+  fps: 16
+  output_dir: "/home/user/videos"
+  output_name: "animated_landscape"
+
+# 音乐生成
+run_text_to_audio_workflow_audio_ace_step_1_t2a_song:
+  tags: "anime, j-pop, female vocals, piano, emotional"
+  lyrics: "[verse]\n春の風が吹いて\n桜の花びら舞う\n[chorus]\n君と歩いた道\n忘れない思い出"
+  seconds: 120
+  output_dir: "/home/user/music"
+  output_name: "spring_song"
 ```
 
 ## 环境变量说明
