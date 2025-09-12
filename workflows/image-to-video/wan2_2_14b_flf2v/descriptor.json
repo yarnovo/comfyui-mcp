@@ -1,191 +1,152 @@
 {
-  "name": "wan2_2_14b_flf2v",
-  "description": "使用 WAN 2.2 14B 模型实现首尾帧智能插值生成流畅视频的专业工具。该工作流采用双阶段去噪策略，通过高噪声和低噪声两个14B参数模型的协同处理，在给定起始帧和结束帧的情况下自动生成中间过渡帧，实现平滑自然的动画效果。特别适合制作变形动画、场景过渡、角色状态转换等创意视频。支持640x640分辨率，可生成最多81帧的高质量视频，确保动作连贯性和视觉一致性。",
+  "description": "使用 WAN 2.2 14B 模型实现首尾帧智能插值生成流畅视频的专业工具。该工作流采用双阶段去噪策略,通过高噪声和低噪声两个14B参数模型的协同处理,在给定起始帧和结束帧的情况下自动生成中间过渡帧,实现平滑自然的动画效果。特别适合制作变形动画、场景过渡、角色状态转换等创意视频。支持640x640分辨率,可生成最多81帧的高质量视频,确保动作连贯性和视觉一致性。",
   "category": "image-to-video",
   "parameters": [
     {
       "name": "positive_prompt",
       "type": "string",
-      "description": "描述从起始帧到结束帧的变化过程和动画效果，如：缓慢变形、流畅过渡、连续动作等",
+      "description": "描述从起始帧到结束帧的变化过程和动画效果,如:缓慢变形、流畅过渡、连续动作等",
       "required": true,
-      "default": "",
-      "path": "6.inputs.text"
+      "path": "6.inputs.text",
+      "default": ""
     },
     {
       "name": "negative_prompt",
       "type": "string",
-      "description": "负向提示词，描述不想要出现的内容，如：静止、跳跃、模糊、不连贯等",
+      "description": "负向提示词,描述不想要出现的内容,如:静止、跳跃、模糊、不连贯等",
       "required": false,
-      "default": null,
-      "path": "7.inputs.text"
+      "path": "7.inputs.text",
+      "default": null
     },
     {
       "name": "start_image",
       "type": "string",
       "subtype": "image",
-      "description": "起始帧图片路径，作为动画的第一帧",
+      "description": "起始帧图片路径,作为动画的第一帧",
       "required": true,
-      "default": "",
-      "path": "68.inputs.image"
+      "path": "68.inputs.image",
+      "default": ""
     },
     {
       "name": "end_image",
       "type": "string",
       "subtype": "image",
-      "description": "结束帧图片路径，作为动画的最后一帧",
+      "description": "结束帧图片路径,作为动画的最后一帧",
       "required": true,
-      "default": "",
-      "path": "62.inputs.image"
+      "path": "62.inputs.image",
+      "default": ""
     },
     {
       "name": "width",
       "type": "number",
-      "description": "视频宽度（像素）",
+      "description": "视频宽度(像素)",
       "required": false,
-      "default": 640,
-      "min": 256,
-      "max": 1024,
-      "path": "67.inputs.width"
+      "path": "67.inputs.width",
+      "default": 640
     },
     {
       "name": "height",
       "type": "number",
-      "description": "视频高度（像素）",
+      "description": "视频高度(像素)",
       "required": false,
-      "default": 640,
-      "min": 256,
-      "max": 1024,
-      "path": "67.inputs.height"
+      "path": "67.inputs.height",
+      "default": 640
     },
     {
       "name": "length",
       "type": "number",
-      "description": "视频总帧数，决定动画的流畅度和时长",
+      "description": "视频总帧数,决定动画的流畅度和时长",
       "required": false,
-      "default": 81,
-      "min": 16,
-      "max": 128,
-      "path": "67.inputs.length"
+      "path": "67.inputs.length",
+      "default": 81
     },
     {
-      "name": "fps",
+      "name": "batch_size",
       "type": "number",
-      "description": "视频帧率，每秒显示的帧数",
+      "description": "批次大小,一次生成多少个视频",
       "required": false,
-      "default": 16,
-      "min": 8,
-      "max": 60,
-      "path": "60.inputs.fps"
+      "path": "67.inputs.batch_size",
+      "default": 1
     },
     {
       "name": "seed",
       "type": "number",
-      "description": "随机种子，用于生成结果的可重复性",
+      "description": "随机种子,用于生成结果的可重复性",
       "required": false,
-      "default": 456592759901286,
-      "min": 0,
-      "max": 999999999999999,
-      "path": "57.inputs.noise_seed"
+      "path": "57.inputs.noise_seed",
+      "default": 700186556733869
     },
     {
       "name": "steps",
       "type": "number",
-      "description": "采样步数，影响生成质量和细节",
+      "description": "采样步数,影响生成质量和细节",
       "required": false,
-      "default": 20,
-      "min": 10,
-      "max": 50,
-      "path": "57.inputs.steps"
+      "path": "57.inputs.steps",
+      "default": 4
     },
     {
       "name": "cfg",
       "type": "number",
-      "description": "分类器引导强度，控制提示词对生成的影响程度",
+      "description": "分类器引导强度,控制提示词对生成的影响程度",
       "required": false,
-      "default": 4,
-      "min": 1,
-      "max": 20,
-      "path": "57.inputs.cfg"
+      "path": "57.inputs.cfg",
+      "default": 1
     },
     {
       "name": "sampler_name",
       "type": "string",
       "description": "采样器名称",
       "required": false,
-      "default": "euler",
-      "enum": ["euler", "euler_ancestral", "heun", "dpm_2", "dpm_2_ancestral", "lms", "dpm_fast", "dpm_adaptive"],
-      "path": "57.inputs.sampler_name"
+      "path": "57.inputs.sampler_name",
+      "default": "euler"
     },
     {
       "name": "scheduler",
       "type": "string",
       "description": "调度器类型",
       "required": false,
-      "default": "simple",
-      "enum": ["normal", "karras", "exponential", "sgm_uniform", "simple"],
-      "path": "57.inputs.scheduler"
+      "path": "57.inputs.scheduler",
+      "default": "simple"
     },
     {
       "name": "shift",
       "type": "number",
-      "description": "SD3 采样算法的偏移值，影响生成的风格和细节",
+      "description": "SD3 采样算法的偏移值,影响生成的风格和细节",
       "required": false,
-      "default": 8,
-      "min": 0,
-      "max": 20,
-      "path": "54.inputs.shift"
+      "path": "54.inputs.shift",
+      "default": 5
     },
     {
-      "name": "batch_size",
+      "name": "fps",
       "type": "number",
-      "description": "批次大小，一次生成多少个视频",
+      "description": "视频帧率,每秒显示的帧数",
       "required": false,
-      "default": 1,
-      "min": 1,
-      "max": 4,
-      "path": "67.inputs.batch_size"
+      "path": "60.inputs.fps",
+      "default": 16
     },
     {
       "name": "filename_prefix",
       "type": "string",
       "description": "输出视频文件名前缀",
       "required": false,
-      "default": "video/ComfyUI",
-      "path": "61.inputs.filename_prefix"
+      "path": "61.inputs.filename_prefix",
+      "default": "video/ComfyUI"
     },
     {
       "name": "video_format",
       "type": "string",
       "description": "视频格式",
       "required": false,
-      "default": "auto",
-      "enum": ["auto", "mp4", "webm", "avi"],
-      "path": "61.inputs.format"
+      "path": "61.inputs.format",
+      "default": "auto"
     },
     {
       "name": "codec",
       "type": "string",
       "description": "视频编码器",
       "required": false,
-      "default": "auto",
-      "enum": ["auto", "h264", "h265", "vp9"],
-      "path": "61.inputs.codec"
+      "path": "61.inputs.codec",
+      "default": "auto"
     }
-  ],
-  "models": {
-    "unet_high_noise": "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
-    "unet_low_noise": "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors",
-    "clip": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
-    "vae": "wan_2.1_vae.safetensors"
-  },
-  "tags": [
-    "image-to-video",
-    "wan",
-    "frame-interpolation",
-    "morphing",
-    "video-generation",
-    "14b-model"
-  ],
-  "output_node": "61",
-  "version": "1.0.0"
+  ]
 }
